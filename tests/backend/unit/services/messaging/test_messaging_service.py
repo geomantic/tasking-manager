@@ -20,7 +20,7 @@ class TestMessagingService(unittest.TestCase):
 
         # Assert
         self.assertEqual(
-            link, '<a href="http://test.com/projects/1/tasks/?search=1">Task 1</a>'
+            link, '<Link to="/projects/1/tasks/?search=1">Task 1</Link>',
         )
 
     def test_message_service_generates_correct_chat_link(self):
@@ -28,6 +28,5 @@ class TestMessagingService(unittest.TestCase):
         link = MessageService.get_project_link(1, "http://test.com")
 
         self.assertEqual(
-            link,
-            '<a href="http://test.com/projects/1#questionsAndComments">Project 1</a>',
+            link, '<Link to="/projects/1">Project 1</Link>',
         )

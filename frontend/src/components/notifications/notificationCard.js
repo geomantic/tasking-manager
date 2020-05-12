@@ -12,6 +12,7 @@ import { UserAvatar } from '../user/avatar';
 import { DeleteModal } from '../deleteModal';
 import { RelativeTimeWithUnit } from '../../utils/formattedRelativeTime';
 import { fetchLocalJSONAPI } from '../../network/genericJSONRequest';
+import { navigate } from '@reach/router';
 
 export const rawHtmlNotification = (notificationHtml) => ({
   __html: DOMPurify.sanitize(notificationHtml),
@@ -69,8 +70,7 @@ export function NotificationCard({
   };
 
   return (
-    <Link to={`/inbox/message/${messageId}`} className={`no-underline `}>
-      <article className={`db base-font bg-white w-100 mb1 blue-dark mw8 ${readStyle}`}>
+      <article onClick={() => navigate(`/inbox/message/${messageId}`)} className={`pointer db base-font bg-white w-100 mb1 blue-dark mw8 ${readStyle}`}>
         <div className="pv3 pr3 ba br1 b--grey-light">
           <div className={`fl dib w2 h3 mh3`}>
             <MessageAvatar messageType={messageType} fromUsername={fromUsername} size={'medium'} />
@@ -124,7 +124,6 @@ export function NotificationCard({
           </div>
         </div>
       </article>
-    </Link>
   );
 }
 

@@ -73,7 +73,7 @@ class MessageService:
             "marked invalid" if status == TaskStatus.INVALIDATED else "validated"
         )
         task_link = MessageService.get_task_link(project_id, task_id)
-
+        project_link = MessageService.get_project_link(project_id)
         text_template = text_template.replace("[USERNAME]", user.username)
         text_template = text_template.replace("[TASK_LINK]", task_link)
 
@@ -87,7 +87,8 @@ class MessageService:
         validation_message.task_id = task_id
         validation_message.from_user_id = validated_by
         validation_message.to_user_id = mapped_by
-        validation_message.subject = f"Your mapping in Project {project_id} on {task_link} has just been {status_text}"
+        subject = f"Your mapping in Project {project_link} on {task_link} has just been {status_text}"
+        validation_message.subject = subject
         validation_message.message = text_template
         validation_message.add_message()
 
@@ -152,7 +153,7 @@ class MessageService:
         usernames = MessageService._parse_message_for_username(comment)
         if len(usernames) != 0:
             task_link = MessageService.get_task_link(project_id, task_id)
-            # project_title = ProjectService.get_project_title(project_id)
+            project_link = MessageService.get_project_link(project_id)
 
             messages = []
             for username in usernames:
@@ -172,7 +173,7 @@ class MessageService:
                 message.task_id = task_id
                 message.from_user_id = comment_from
                 message.to_user_id = user.id
-                message.subject = f"You were mentioned in a comment in Project {project_id} on {task_link}"
+                message.subject = f"You were mentioned in a comment in Project {project_link} on {task_link}"
                 message.message = comment
                 messages.append(dict(message=message, user=user))
 
@@ -195,7 +196,7 @@ class MessageService:
                 raise ValueError("Username not found")
 
             task_link = MessageService.get_task_link(project_id, task_id)
-            # project_title = ProjectService.get_project_title(project_id)
+            project_link = MessageService.get_project_link(project_id)
             messages = []
             for user_id in contributed_users:
                 try:
@@ -211,7 +212,7 @@ class MessageService:
                 message.project_id = project_id
                 message.task_id = task_id
                 message.to_user_id = user.id
-                message.subject = f"{user_from.username} left a comment in Project {project_id} on {task_link}"
+                message.subject = f"{user_from.username} left a comment in Project {project_link} on {task_link}"
                 message.message = comment
                 messages.append(dict(message=message, user=user))
 
@@ -534,26 +535,16 @@ class MessageService:
     @staticmethod
     def get_task_link(project_id: int, task_id: int, base_url=None) -> str:
         """ Helper method that generates a link to the task """
-        if not base_url:
-            base_url = current_app.config["APP_BASE_URL"]
-
-        link = f'<a href="{base_url}/projects/{project_id}/tasks/?search={task_id}">Task {task_id}</a>'
+        link = f'<Link to="/projects/{project_id}/tasks/?search={task_id}">Task {task_id}</Link>'
         return link
 
     @staticmethod
     def get_project_link(project_id: int, base_url=None) -> str:
-        """ Helper method to generate a link to project chat"""
-        if not base_url:
-            base_url = current_app.config["APP_BASE_URL"]
-
-        link = f'<a href="{base_url}/projects/{project_id}#questionsAndComments">Project {project_id}</a>'
+        link = f'<Link to="/projects/{project_id}">Project {project_id}</Link>'
         return link
 
     @staticmethod
     def get_user_profile_link(user_name: str, base_url=None) -> str:
         """ Helper method to generate a link to a user profile"""
-        if not base_url:
-            base_url = current_app.config["APP_BASE_URL"]
-
-        link = f'<a href="{base_url}/users/{user_name}>{user_name}</a>'
+        link = f'<Link to="/users/{user_name}>{user_name}</Link>'
         return link

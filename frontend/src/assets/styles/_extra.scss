@@ -185,9 +185,8 @@ strong.messageSubjectLinks {
   & > a {
     color: $blue-dark;
     font-weight: 600;
-    text-decoration: none;
   }
-  &:hover {
+  & > a:hover {
     & > a {
       color: $red;
     }

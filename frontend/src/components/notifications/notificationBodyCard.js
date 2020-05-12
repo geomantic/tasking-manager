@@ -30,7 +30,6 @@ export const NotificationBodyModal = props => {
       <div
         className={`relative shadow-3`}
         onClick={e => {
-          e.preventDefault();
           e.stopPropagation();
         }}
         style={{
