@@ -351,6 +351,14 @@ export default defineMessages({
     id: 'projects.formInputs.priority_areas.action.clear',
     defaultMessage: 'Clear all',
   },
+  downloadProjectAOI: {
+    id: 'projects.formInputs.priority_areas.link.aoi',
+    defaultMessage: 'Download AOI',
+  },
+  downloadTaskGrid: {
+    id: 'projects.formInputs.priority_areas.link.tasks',
+    defaultMessage: 'Download Tasks Grid',
+  },
   name: {
     id: 'projects.formInputs.name',
     defaultMessage: 'Name of the project',

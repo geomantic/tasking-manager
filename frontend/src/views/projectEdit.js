@@ -166,7 +166,7 @@ export function ProjectEdit({ id }) {
       case 'settings':
         return <SettingsForm languages={languages} defaultLocale={projectInfo.defaultLocale} />;
       case 'priority_areas':
-        return <PriorityAreasForm />;
+        return <PriorityAreasForm projectId={projectInfo.projectId} />;
       case 'actions':
         return (
           <ActionsForm

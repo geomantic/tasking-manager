@@ -9,7 +9,7 @@ import { FormattedMessage } from 'react-intl';
 import messages from './messages';
 import { StateContext, styleClasses } from '../../views/projectEdit';
 import { Button } from '../button';
-import { MAPBOX_TOKEN, MAP_STYLE, MAPBOX_RTL_PLUGIN_URL } from '../../config';
+import { MAPBOX_TOKEN, MAP_STYLE, MAPBOX_RTL_PLUGIN_URL, API_URL } from '../../config';
 
 const MapboxDraw = require('@mapbox/mapbox-gl-draw');
 
@@ -20,10 +20,10 @@ try {
   console.log('RTLTextPlugin is loaded');
 }
 
-export const PriorityAreasForm = () => {
+export const PriorityAreasForm = ({ projectId }: Object) => {
   const { projectInfo, setProjectInfo } = useContext(StateContext);
   const mapRef = React.createRef();
-  const locale = useSelector(state => state.preferences['locale']);
+  const locale = useSelector((state) => state.preferences['locale']);
   const [map, setMap] = useState(null);
   const [activeMode, setActiveMode] = useState('draw_polygon');
 
@@ -77,7 +77,7 @@ export const PriorityAreasForm = () => {
         }
 
         // update As features
-        const drawPriorityAreas = priorityAreas.map(a => ({
+        const drawPriorityAreas = priorityAreas.map((a) => ({
           type: 'Feature',
           properties: {},
           geometry: a,
@@ -118,7 +118,7 @@ export const PriorityAreasForm = () => {
           },
         });
 
-        map.on('draw.create', e => {
+        map.on('draw.create', (e) => {
           priorityAreas.push(e.features[0].geometry);
           setProjectInfo({ ...projectInfo, priorityAreas: priorityAreas });
         });
@@ -126,7 +126,7 @@ export const PriorityAreasForm = () => {
     }
   }, [map, draw, projectInfo, setProjectInfo]);
 
-  const clearAll = e => {
+  const clearAll = (e) => {
     draw[0].deleteAll();
     map.removeLayer('priority_areas');
     map.removeSource('priority_areas');
@@ -139,7 +139,7 @@ export const PriorityAreasForm = () => {
         <FormattedMessage {...messages.priorityAreasDescription} />
       </p>
       <div className="pb2">
-        {['draw_polygon', 'draw_rectangle'].map(option => (
+        {['draw_polygon', 'draw_rectangle'].map((option) => (
           <label className="di pr3" key={option}>
             <input
               value={option}
@@ -160,6 +160,24 @@ export const PriorityAreasForm = () => {
       </div>
 
       <div id="map" ref={mapRef} className="vh-75 w-100"></div>
+      <div className="pv3 blue-dark">
+        <a
+          href={`${API_URL}projects/${projectId}/queries/aoi/?as_file=true`}
+          download={`project-${projectId}-aoi.geojson`}
+        >
+          <Button className={styleClasses.whiteButtonClass}>
+            <FormattedMessage {...messages.downloadProjectAOI} />
+          </Button>
+        </a>
+        <a
+          href={`${API_URL}projects/${projectId}/tasks/?as_file=true`}
+          download={`project-${projectId}-tasks.geojson`}
+        >
+          <Button className={styleClasses.whiteButtonClass}>
+            <FormattedMessage {...messages.downloadTaskGrid} />
+          </Button>
+        </a>
+      </div>
     </div>
   );
 };
