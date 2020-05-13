@@ -91,7 +91,9 @@ export default function SetAOI({ mapObj, metadata, updateMetadata, setErr }) {
     if (file.size >= MAX_FILESIZE) {
       setErr({
         error: true,
-        message: <FormattedMessage {...messages.fileSize} values={{ fileSize: MAX_FILESIZE/1000000 }} />,
+        message: (
+          <FormattedMessage {...messages.fileSize} values={{ fileSize: MAX_FILESIZE / 1000000 }} />
+        ),
       });
       return null;
     }
@@ -152,6 +154,7 @@ export default function SetAOI({ mapObj, metadata, updateMetadata, setErr }) {
       mapObj.map.removeSource(layer_name);
     }
     updateMetadata({ ...metadata, area: 0, geom: null });
+    setArbitrary(false);
   };
 
   const drawHandler = () => {
@@ -196,10 +199,9 @@ export default function SetAOI({ mapObj, metadata, updateMetadata, setErr }) {
             type="checkbox"
             className="v-mid"
             defaultChecked={metadata.arbitraryTasks}
+            disabled={!arbitraryTasks}
             onChange={() => {
-              if (arbitraryTasks === true) {
-                updateMetadata({ ...metadata, arbitraryTasks: !metadata.arbitraryTasks });
-              }
+              updateMetadata({ ...metadata, arbitraryTasks: !metadata.arbitraryTasks });
             }}
           />
           <span className="pl2 v-mid">
