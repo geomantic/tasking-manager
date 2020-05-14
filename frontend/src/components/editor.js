@@ -4,10 +4,20 @@ import * as iD from '@hotosm/id';
 import '@hotosm/id/dist/iD.css';
 
 import { OSM_CONSUMER_KEY, OSM_CONSUMER_SECRET } from '../config';
+import { removeItem } from '../utils/safe_storage';
 
 export default function Editor({ editorRef, setEditorRef, setDisable }) {
   const session = useSelector((state) => state.auth.get('session'));
   const windowInit = typeof window !== undefined;
+
+  useEffect(() => {
+    return () => {
+      window.iD.coreContext('destroy');
+      removeItem('comment');
+      removeItem('hashtags');
+      removeItem('commentDate');
+    };
+  }, []);
 
   useEffect(() => {
     if (windowInit && !editorRef) {
@@ -16,7 +26,7 @@ export default function Editor({ editorRef, setEditorRef, setDisable }) {
   }, [windowInit, setEditorRef, editorRef]);
 
   useEffect(() => {
-    if (session && iD && editorRef) {
+    if (session && window.iD && editorRef) {
       editorRef
         .embed(true)
         .assetPath('/static/')
