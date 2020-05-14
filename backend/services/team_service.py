@@ -341,7 +341,7 @@ class TeamService:
 
     @staticmethod
     def get_project_teams_as_dto(project_id: int) -> TeamsListDTO:
-        """ Gets all the campaigns for a specified project """
+        """ Gets all the teams for a specified project """
         project_teams = ProjectTeams.query.filter(
             ProjectTeams.project_id == project_id
         ).all()
@@ -499,3 +499,17 @@ class TeamService:
             team.delete()
         else:
             raise TeamServiceError("Team has projects, cannot be deleted")
+
+    @staticmethod
+    def check_team_membership(project_id: int, allowed_roles: list, user_id: int):
+        """ Given a project and permitted team roles, check user's membership in the team list """
+        teams_dto = TeamService.get_project_teams_as_dto(project_id)
+        teams_allowed = [
+            team_dto for team_dto in teams_dto.teams if team_dto.role in allowed_roles
+        ]
+        user_membership = [
+            team_dto.team_id
+            for team_dto in teams_allowed
+            if TeamService.is_user_member_of_team(team_dto.team_id, user_id)
+        ]
+        return len(user_membership) > 0
